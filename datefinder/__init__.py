@@ -123,16 +123,16 @@ class DateFinder(object):
             date_string, tz_string = self._find_and_replace(date_string, captures)
 
             ## One last sweep after removing
-            date_string = date_string.strip(STRIP_CHARS)
+            replaced_date = replaced_date.strip(STRIP_CHARS)
             ## Match strings must be at least 3 characters long
             ## < 3 tends to be garbage
-            if len(date_string) < 3:
+            if len(replaced_date) < 3:
                 return None
 
             try:
-                logger.debug("Parsing {0} with dateutil".format(date_string))
+                logger.debug("Parsing {0} with dateutil".format(replaced_date))
                 as_dt = parser.parse(
-                    date_string,
+                    replaced_date,
                     default=self.base_date,
                     dayfirst=self.dayfirst,
                     yearfirst=self.yearfirst,
