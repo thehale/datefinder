@@ -29,12 +29,6 @@ class DateFinder(object):
             year=today.year, month=today.month, day=today.day
         )
         self.first = first
-        self.dayfirst = False
-        self.yearfirst = False
-        if first == "day":
-            self.dayfirst = True
-        if first == "year":
-            self.yearfirst = True
 
     def find_dates(self, text, source=False, index=False, strict=False):
 
@@ -121,8 +115,8 @@ class DateFinder(object):
             as_dt = parser.parse(
                 date_string,
                 default=self.base_date,
-                dayfirst=self.dayfirst,
-                yearfirst=self.yearfirst,
+                dayfirst=self.first == "day",
+                yearfirst=self.first == "year",
             )
         except (ValueError, OverflowError):
             # replace tokens that are problematic for dateutil
@@ -140,8 +134,8 @@ class DateFinder(object):
                 as_dt = parser.parse(
                     replaced_date,
                     default=self.base_date,
-                    dayfirst=self.dayfirst,
-                    yearfirst=self.yearfirst,
+                    dayfirst=self.first == "day",
+                    yearfirst=self.first == "year",
                 )
             except Exception as e:
                 logger.debug(e)
