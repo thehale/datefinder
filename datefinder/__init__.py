@@ -1,6 +1,8 @@
 import copy
 import logging
 import regex as re
+import dateparser
+from datetime import date, datetime
 from dateutil import tz, parser
 from datefinder.date_fragment import DateFragment
 from .constants import (
@@ -22,7 +24,11 @@ class DateFinder(object):
     """
 
     def __init__(self, base_date=None, first="month"):
-        self.base_date = base_date
+        today = date.today()
+        self.base_date = base_date or datetime(
+            year=today.year, month=today.month, day=today.day
+        )
+        self.first = first
         self.dayfirst = False
         self.yearfirst = False
         if first == "day":
@@ -120,7 +126,7 @@ class DateFinder(object):
             )
         except (ValueError, OverflowError):
             # replace tokens that are problematic for dateutil
-            date_string, tz_string = self._find_and_replace(date_string, captures)
+            replaced_date, tz_string = self._find_and_replace(date_string, captures)
 
             ## One last sweep after removing
             replaced_date = replaced_date.strip(STRIP_CHARS)
@@ -142,6 +148,20 @@ class DateFinder(object):
                 as_dt = None
             if tz_string:
                 as_dt = self._add_tzinfo(as_dt, tz_string)
+
+        if as_dt is None:
+            # if dateutil didn't work, try with the more general, but slower, `dateparser` library
+            as_dt = dateparser.parse(
+                date_string,
+                settings={
+                    "RELATIVE_BASE": self.base_date,
+                    "DATE_ORDER": {
+                        "month": "MDY",
+                        "day": "DMY",
+                        "year": "YMD",
+                    }[self.first],
+                },
+            )
         return as_dt
 
     def extract_date_strings(self, text, strict=False):

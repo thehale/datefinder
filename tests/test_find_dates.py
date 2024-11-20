@@ -75,7 +75,7 @@ today = datetime.today()
         (
             "31 Oct 2021 - 28 Nov 2021",
             [datetime(2021, 10, 31), datetime(2021, 11, 28)],
-            "day"
+            "day",
         ),
         # Z dates with and without millis, from https://github.com/akoumjian/datefinder/issues/37
         (
@@ -111,6 +111,12 @@ today = datetime.today()
         ("01/02/03", datetime(2001, 2, 3, 0, 0, 0, 0), "year"),
         ("02/05/2020", datetime(2020, 2, 5, 0, 0, 0, 0), "month"),
         ("02/05/2020", datetime(2020, 5, 2, 0, 0, 0, 0), "day"),
+        # Find datetimes separated by a comma
+        (
+            "Let's meet November 3, 2024, 18:00 PM for the activity?",
+            datetime(2024, 11, 3, 18, 0),
+            "month",
+        ),
     ],
 )
 def test_find_date_strings(input_text, expected_date, first):

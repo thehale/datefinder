@@ -69,7 +69,7 @@ setup(
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=["regex>=2017.02.08", "python-dateutil>=2.4.2", "pytz"],
+    install_requires=["dateparser>=1.1.6", "regex>=2017.02.08", "python-dateutil>=2.4.2", "pytz"],
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,
     # for example:
